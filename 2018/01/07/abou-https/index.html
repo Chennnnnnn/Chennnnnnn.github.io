@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>浅析HTTPS | Chennnn</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">浅析HTTPS</h1><a id="logo" href="/.">Chennnn</a><p class="description">在安静中，不慌不忙地坚强</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 主页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">浅析HTTPS</h1><div class="post-meta">Jan 7, 2018<span> | </span><span class="category"><a href="/categories/计算机网络/">计算机网络</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#相关概念"><span class="toc-number">1.</span> <span class="toc-text">相关概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对称密码体制"><span class="toc-number">1.1.</span> <span class="toc-text">对称密码体制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非对称密码体制"><span class="toc-number">1.2.</span> <span class="toc-text">非对称密码体制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数字签名"><span class="toc-number">1.3.</span> <span class="toc-text">数字签名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数字证书"><span class="toc-number">1.4.</span> <span class="toc-text">数字证书</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTPS"><span class="toc-number">2.</span> <span class="toc-text">HTTPS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SSL"><span class="toc-number">2.1.</span> <span class="toc-text">SSL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SSL体系结构"><span class="toc-number">2.1.1.</span> <span class="toc-text">SSL体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSL握手协议"><span class="toc-number">2.1.2.</span> <span class="toc-text">SSL握手协议</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#目的"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">目的</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#四个阶段"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">四个阶段</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSL修改密码规范协议"><span class="toc-number">2.1.3.</span> <span class="toc-text">SSL修改密码规范协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSL警报协议"><span class="toc-number">2.1.4.</span> <span class="toc-text">SSL警报协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SSL记录协议"><span class="toc-number">2.1.5.</span> <span class="toc-text">SSL记录协议</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTPS大致流程"><span class="toc-number">2.2.</span> <span class="toc-text">HTTPS大致流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#https与http"><span class="toc-number">2.3.</span> <span class="toc-text">https与http</span></a></li></ol></li></ol></div></div><div class="post-content"><p>在说HTTPS之前，需要先了解几个概念</p>
+<h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><h3 id="对称密码体制"><a href="#对称密码体制" class="headerlink" title="对称密码体制"></a>对称密码体制</h3><p>对称密钥加密技术中，发送端和接收端使用相同的密钥才能进行通信</p>
+<p>发送端用共享的密钥来加密报文，并将得到的密文发送给接收端。接收端收到密文后，并对其应用解密函数和相应的共享密钥，恢复出原始的明文</p>
+<p>对称加密的缺点之一是发送者和接收者在互相对话之前，一定要有一个共享的保密密钥</p>
+<h3 id="非对称密码体制"><a href="#非对称密码体制" class="headerlink" title="非对称密码体制"></a>非对称密码体制</h3><p>传统的对称密码体制中，加密和解密使用相同的密钥，每对用户之间都需要共享一个密钥，而且需要保证该密钥的机密性。当通信的用户数目比较多的时候，密钥的产生，存储和分发是一个很大的问题</p>
+<p>而公钥密码体制则将加密密钥，加密算法，解密算法公开。任何人都可以加密，但只有掌握解密密钥的用户才能解密。</p>
+<p>因为公钥密码体制算法相对复杂，加解密速度慢，实际应用中，公钥密码和对称密码结合起来使用，明文加解密使用对称密码技术，而对称密码体制的密钥使用公钥密码技术</p>
+<h3 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h3><p>简单来说，数字签名是附加在报文上的特殊加密校验码（可以是对整个消息签名，也可以是对消息的散列值签名，一般要求每条要签名的消息都要附上一个时间戳）。</p>
+<p>使用数字签名可以证明是谁发送了报文（只有发送者使用私有密钥才能计算出检验和），可以防止报文被篡改（攻击者无法在篡改报文后伪造出正确的校验码）。</p>
+<p>数字签名通常是用公开密钥技术生产的：发送方使用自己的私钥加密，接收方使用发送方的公钥解密</p>
+<h3 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a>数字证书</h3><p>数字证书就像是因特网上的“ID卡”，是互联网通讯各方身份信息的一系列数据，提供了一种在因特网上验证身份的方式</p>
+<p>数字证书是一个经数字证书授权中心CA数字签名的包含公开密钥拥有者信息以及公开密钥的文件</p>
+<hr>
+<p>有了以上几个概念，接下来进入正题，我们来说说HTTPS</p>
+<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><p>简单来说，HTTPS是在HTTP下面提供了一个传输级的密码安全层，可以是SSL，也可以是其后继者TLS</p>
+<p>HTTPS将HTTP协议与一组强大的对称，非对称和基于证书的加密技术结合在一起，使得HTTPS不仅安全，而且灵活，很容易处于无序状态的 ，分散的全球互联网上进行进行管理</p>
+<p>SSL和TLS是介于传输层和应用层间的安全层，下文对SSL和TLS统称为SSL</p>
+<h3 id="SSL"><a href="#SSL" class="headerlink" title="SSL"></a>SSL</h3><p>SSL为安全套接层协议，主要目标是为HTTP协议提供保密和可靠通信</p>
+<h4 id="SSL体系结构"><a href="#SSL体系结构" class="headerlink" title="SSL体系结构"></a>SSL体系结构</h4><ul>
+<li>SSL握手协议</li>
+<li>SSL修改密码规范协议</li>
+<li>SSL警报协议</li>
+<li>SSL记录协议</li>
+</ul>
+<h4 id="SSL握手协议"><a href="#SSL握手协议" class="headerlink" title="SSL握手协议"></a>SSL握手协议</h4><h5 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h5><p>在发送已加密的HTTP报文之前，客户端和服务器要进行 一次SSL握手，在这个握手过程中，它们要完成以下工作：</p>
+<ul>
+<li>交换协议版本号</li>
+<li>选择一个两端都了解的密码</li>
+<li>对两端的身份进行认证</li>
+<li>生成临时的会话密钥</li>
+</ul>
+<h5 id="四个阶段"><a href="#四个阶段" class="headerlink" title="四个阶段"></a>四个阶段</h5><p>A：客户端   B：服务端</p>
+<ol>
+<li>建立逻辑连接：A发起会话请求，并发送自己支持的加密算法的列表和一个随机数S1</li>
+<li>服务器认证和密钥交换：B把自己的数字证书以及另一个随机数S2发送给A，同时在消息1的密码算法列表中选择自己能够支持的算法响应给A</li>
+<li>客户端认证和密钥交换：A选择一个随机数S，根据S，S1和S2计算会话密钥K。然后A从数字证书中取出B的公钥加密S后发送给B。（这里使用<code>非对称密码体制</code>）</li>
+<li>完成：B用自己的私钥解密得到S，并根据S，S1，S2计算会话密钥K。确定密码组，结束握手协议</li>
+</ol>
+<p>在之后的通信双方会使用已商定的密钥进行<code>对称密码体制</code>加密通信</p>
+<h4 id="SSL修改密码规范协议"><a href="#SSL修改密码规范协议" class="headerlink" title="SSL修改密码规范协议"></a>SSL修改密码规范协议</h4><p>客户端和服务器端都能发送改变密码说明消息，通知接收方将使用刚刚协商的密码算法和密钥来加密后的记录</p>
+<h4 id="SSL警报协议"><a href="#SSL警报协议" class="headerlink" title="SSL警报协议"></a>SSL警报协议</h4><p>报警协议用于向对等实体传递SSL相关的报警。如果在通信过程中某一方发现任何异常，就需要给对方发送一条警示消息通告</p>
+<h4 id="SSL记录协议"><a href="#SSL记录协议" class="headerlink" title="SSL记录协议"></a>SSL记录协议</h4><p>在SSL协议中，所有传输数据都被封装在记录中。记录是有记录头和长度不为0的记录数据组成的。</p>
+<p>发送时，SSL记录协议从高层协议接收一个要传送的任意长度的数据，将数据分成多个可管理的段，可选择地进行压缩，然后应用MAC，利用IDEA，DES，3DES或其他加密算法进行数据加密，再加上一个SSL记录头。将得到的最终数据单元放入一个TCP报文段中发送出去</p>
+<ol>
+<li>分成数据片段</li>
+<li>压缩数据</li>
+<li>增加MAC</li>
+<li>加密数据和MAC</li>
+<li>增加SSL记录头</li>
+<li>放入TCP报文，交给下一层</li>
+</ol>
+<h3 id="HTTPS大致流程"><a href="#HTTPS大致流程" class="headerlink" title="HTTPS大致流程"></a>HTTPS大致流程</h3><ol>
+<li>客户端向服务端发送一个请求</li>
+<li>通过SSL握手协议建立安全连接</li>
+<li>发送HTTP请求，对称密钥算法进行信息传输，SSL记录协议封装数据</li>
+<li>双方进行通信</li>
+<li>最后由客户端断开连接</li>
+</ol>
+<h3 id="https与http"><a href="#https与http" class="headerlink" title="https与http"></a>https与http</h3><ol>
+<li><p>端口不同：对于一个客户端的请求，会去检查URL的方案，如果是http，客户端就会打开一条道服务器端口80（默认情况下）的连接，并向其发送老的HTTP的命令； 如果URL的方案为https，客户端就会打开一条到服务器端口433（默认情况下）的连接，然后与服务器‘握手’，以二进制格式与服务器交换一些SSL安全参数，附上加密的HTTP命令</p>
+</li>
+<li><p>HTTP速度比较快，HTTPS速度比较慢（建立HTTPS连接，要求额外的TCP往返，会新增一些发送和接收的字节。第一次打开网页的时候，HTTPS会比HTTP慢一点，因为读取和验证SSL证书的时间。但是，一旦有效的HTTPS连接建立起来，再刷新网页，两种协议几乎没有区别。甚至HTTPS比HTTP更快一点。这会发生在一些大公司的内部局域网，通常，公司的网关会截取并分析所有的网络通信。当它遇到HTTPS连接时，它就直接放行，因为HTTPS无法被解读。正是因为少了这个解读的过程，所以HTTPS变得比较快。）</p>
+</li>
+<li><p>HTTPS需要到CA机构申请证书，一般证书很少免费，需要交费，用于证明服务器用途类型，客户端通过信任证书，从而信任主机</p>
+</li>
+</ol>
+</div><div class="tags"></div><div class="post-nav"><a href="/2017/11/24/module/" class="next">模块化</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/js/">js</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/随笔/">随笔</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/前端工程化/" style="font-size: 15px;">前端工程化</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/01/07/abou-https/">浅析HTTPS</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/24/module/">模块化</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/16/type-change/">js的类型转换</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/06/hello-world/">开篇</a></li></ul></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">Chennnn.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
